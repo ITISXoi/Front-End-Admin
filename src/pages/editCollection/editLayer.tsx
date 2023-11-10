@@ -38,7 +38,7 @@ const EditLayer: FC<Props> = ({ onBack, onNext }) => {
 
   const { mutate: finishDraft } = useMutation(createDraftRequest, {
     onSuccess: (data) => {
-      toast.error('Created Draft NFTs Succesed !');
+      toast.success('Created Draft NFTs Succesed !');
       navigate(`/collection/detail/${collectionId}`);
     },
     onError: () => {

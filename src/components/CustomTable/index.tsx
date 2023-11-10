@@ -32,6 +32,7 @@ const CustomTable: FC<CustomTableProps> = (props) => {
   const theme = useTheme();
   const tableData: any = useMemo(() => data, [data]);
   const columns: any = useMemo(() => columnShape, [columnShape]);
+  console.log(tableData, 'tableData');
 
   const {
     getTableProps,

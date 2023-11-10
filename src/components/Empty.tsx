@@ -23,11 +23,18 @@ interface Props {
 const Empty: FC<Props> = ({ sx }) => {
   return (
     <Wrapper sx={sx}>
-      <Box mb="24px" width="108px" height="108px" position="relative">
-        <img src="/static/common/empty.png" width="108px" alt="empty" />
-        <Typography variant="caption" align="center">
-          No item found.
-        </Typography>
+      <Box
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          borderRadius: '10px',
+          gap: '10px',
+        }}
+        mb="24px"
+        position="relative"
+      >
+        <img style={{ borderRadius: '10px', width: '400px' }} src="/static/empty/empty.jpeg" alt="empty" />
       </Box>
     </Wrapper>
   );

@@ -19,8 +19,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { setCollectionId, setLayerQuantity, setTotalNFT } from 'store/ducks/collection/slice';
 import { SMART_CONTRACT_ADDRESS } from 'utils/constants';
 import { useAccount, useNetwork } from 'wagmi';
-import DraftList from './draftList';
 import ImageCard from './ImageCard';
+import DraftList from './draftList';
 import { Accordion, AccordionDetails, AccordionSummary } from './styled';
 
 const CollectionDetail = () => {
@@ -28,7 +28,7 @@ const CollectionDetail = () => {
   const { id } = useParams();
   const { data, refetch } = useCollection(Number(id));
   const { isAdmin } = useUser();
-  const { data: listLayer, refetch: refetchLayer } = useListLayer(Number(data?.id));
+  const { data: listLayer, refetch: refetchLayer } = useListLayer(Number(id), { enabled: !!id });
   const [publicId, setPublicId] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,18 +58,18 @@ const CollectionDetail = () => {
       const startTime = Number(Number(data?.startMintTime) / 1000) || 0;
       const endTime = Number(Number(data?.endMintTime) / 1000) || 0;
       try {
-        const tx = await contract.createCollection(
-          Number(id),
-          data?.name,
-          'TEST',
-          '',
-          data?.paymentToken,
-          10000,
-          startTime,
-          endTime
-          // parseUnits(String(data?.price), token?.decimal).toString()
-        );
-        await tx?.wait(2);
+        // const tx = await contract.createCollection(
+        //   Number(id),
+        //   data?.name,
+        //   'TEST',
+        //   '',
+        //   data?.paymentToken,
+        //   10000,
+        //   startTime,
+        //   endTime
+        //   // parseUnits(String(data?.price), token?.decimal).toString()
+        // );
+        // await tx?.wait(2);
         mutate(Number(id));
         toggleOpen();
       } catch (error) {
@@ -171,7 +171,7 @@ const CollectionDetail = () => {
                       size="large"
                       variant="contained"
                       onClick={publicHandle}
-                      disabled={nowDate.toLocaleString('en-GB') > startDate.toLocaleString('en-GB')}
+                      // disabled={nowDate.toLocaleString('en-GB') > startDate.toLocaleString('en-GB')}
                     >
                       <Typography sx={{ color: 'white' }} variant="h6">
                         Public Collection

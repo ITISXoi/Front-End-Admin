@@ -31,8 +31,8 @@ const Login: FC = () => {
   });
 
   const initialValues = {
-    email: 'dungtloc229@gmail.com',
-    password: 'Dung@1234',
+    email: 'cuonghoang.var@gmail.com',
+    password: 'Cuongbayern@123',
     submit: null,
     remember: true,
   };
