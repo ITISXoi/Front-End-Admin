@@ -15,7 +15,7 @@ interface IRecord {
   state: {
     pageIndex: number;
     pageSize: number;
-  }
+  };
 }
 
 const ColumnShape = (currentPage: number) => [
@@ -23,10 +23,10 @@ const ColumnShape = (currentPage: number) => [
     Header: 'ID.',
     accessor: 'id',
     width: 30,
-    Cell: ( data: any ) => { 
+    Cell: (data: any) => {
       const {
         row,
-        state: { pageSize}, 
+        state: { pageSize },
       }: IRecord = data;
       return <H6 color="text.primary">{row.index + 1 + pageSize * (currentPage - 1)}</H6>;
     },
@@ -38,8 +38,8 @@ const ColumnShape = (currentPage: number) => [
       if (!value) return '------------';
 
       return (
-        <Stack >
-          <img alt='' src={value} style={{height: 50, width: 50}}/>
+        <Stack>
+          <img alt="" src={value} style={{ height: 50, width: 50 }} />
         </Stack>
       );
     },
@@ -74,10 +74,7 @@ const ColumnShape = (currentPage: number) => [
     accessor: 'status',
     Cell: ({ row }: IRecord) => {
       if (!row.original.status) return 'Draft';
-
-      return (
-        'Active'
-      );
+      return 'Published';
     },
   },
   {
@@ -86,7 +83,7 @@ const ColumnShape = (currentPage: number) => [
     Cell: ({ row }: IRecord) => {
       return (
         <Link to={`/${routesEnum.collectionDetail}/${row.original.id}`}>
-          <Button sx={{width: 5, height: 30 }} variant= "contained">
+          <Button sx={{ width: 5, height: 30 }} variant="contained">
             View
           </Button>
         </Link>

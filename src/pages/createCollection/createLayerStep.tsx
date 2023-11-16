@@ -27,10 +27,8 @@ interface Props {
 }
 const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   useTitle('Create Collection');
-  // const totalNFT = useAppSelector(getTotalNFT);
   const collectionId = useAppSelector(getCollectionId);
   const type = useAppSelector(getType);
-  // const layersQuantity = useAppSelector(getLayerQuantity);
   const currency = useAppSelector(getCurrency);
   const { data } = useLayerPreview({ collectionId: collectionId, layerIndex: step });
   const [isFullLoading, setFullLoading] = useState(false);
@@ -57,31 +55,25 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().max(256).required('Collection Name required!'),
-    description: Yup.string().max(256).required('Description required!'),
-    images: Yup.array().of(
-      Yup.object().shape({
-        quantity: Yup.number()
-          .typeError('You must specify a number')
-          .required('Quantity required!')
-          .min(1, 'Quantity must bigger than 0'),
-        price: Yup.number().typeError('You must specify a number').required('Quantity required!'),
-      })
-    ),
-    // .test('sum', '*Error: Sum of images must be equal to total image copies!', (images) => {
-    //   const sum = images?.reduce<number>((sum, item) => {
-    //     return sum + Number(item.quantity);
-    //   }, 0);
-    //   return Number(sum) === Number(totalNFT);
-    // }),
+    name: finish ? Yup.string().max(256) : Yup.string().max(256).required('Collection Name required!'),
+    description: finish ? Yup.string().max(256) : Yup.string().max(256).required('Description required!'),
+    images: finish
+      ? Yup.array()
+      : Yup.array().of(
+          Yup.object().shape({
+            quantity: Yup.number()
+              .typeError('You must specify a number')
+              .required('Quantity required!')
+              .min(1, 'Quantity must bigger than 0'),
+            price: Yup.number().typeError('You must specify a number').required('Quantity required!'),
+          })
+        ),
   });
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
-    // enableReinitialize: true,
     onSubmit: (values: ILayerCreate) => {
-      // values.images = imageList;
       const listHaveFile = values?.images?.filter((item_) => typeof item_.imageUrl !== 'string');
       const listNotHaveFile = values?.images?.filter((item_) => typeof item_.imageUrl === 'string');
       const imagesDescription = listHaveFile
@@ -95,7 +87,6 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
           });
         })
         .toString();
-
       const dataUpdate = listNotHaveFile
         .map((imgObject, index) => {
           return JSON.stringify({
@@ -109,19 +100,6 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
           });
         })
         .toString();
-      console.log(
-        listNotHaveFile.map((imgObject, index) => {
-          return {
-            ...imgObject,
-            id: imgObject?.id,
-            name: imgObject?.name,
-            quantity: imgObject?.quantity,
-            probability: Number(Number((imgObject?.quantity * 100) / totalQuantity).toFixed(2)),
-            price: imgObject?.price,
-            description: '',
-          };
-        })
-      );
       const mutate = data?.name ? update : add;
       mutate(
         convertToFormData({
@@ -151,11 +129,10 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
       setFieldValue('description', '');
       setTouched({}, false);
       toast.success('Create layer successfully!');
-      // if (step === Number(layersQuantity)) navigate(`/collection/detail/${collectionId}`);
-      // else
       onNext();
     },
     onError: () => {
+      setFullLoading(false);
       toast.error('Create Failed');
     },
   });
@@ -169,36 +146,18 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
       setFieldValue('description', '');
       setTouched({}, false);
       toast.success('Update layer successfully!');
-      // if (step === Number(layersQuantity)) navigate(`/collection/detail/${collectionId}`);
-      // else
       onNext();
     },
     onError: () => {
+      setFullLoading(false);
       toast.error('Update Failed');
     },
   });
 
   const onSuccess = (files: File[] | undefined) => {
     if (!files) return;
-    // if (files?.length + imageObjectList?.length > totalNFT) {
-    //   toast.error(`You cant add more than ${totalNFT} image`);
-    //   return;
-    // }
     let quantity = 1;
-    // let lastQuantity = 0;
-    // if (imageObjectList?.length === 0) {
-    //   quantity = Math.round(totalNFT / files?.length - 0.5);
-    //   lastQuantity = totalNFT - quantity * (files?.length - 1);
-    // }
     const imageObjectNew = files?.map((file, index) => {
-      // if (index === files?.length - 1)
-      //   return {
-      //     name: file.name.substring(0, file.name.indexOf('.')),
-      //     quantity: lastQuantity,
-      //     probability: Number(Number((lastQuantity * 100) / totalNFT).toFixed(2)),
-      //     price: 0,
-      //     imageUrl: file,
-      //   };
       return {
         name: file.name.substring(0, file.name.indexOf('.')),
         quantity: quantity,
@@ -250,7 +209,11 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   useEffect(() => {
     setFieldValue('images', imageObjectList);
   }, [imageObjectList, setFieldValue]);
-
+  const handleFinishCreate = () => {
+    setFullLoading(true);
+    setFinished(true);
+    formik.submitForm();
+  };
   if (!data) {
     return <LoadingScreen />;
   }
@@ -349,13 +312,6 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
                                           </Typography>
                                         ) : null}
                                       </Stack>
-
-                                      {/* <StyledImageTextField
-                                    name={`images[${index}].probability`}
-                                    value={values.images[index].probability}
-                                    onChange={handleChange}
-                                    label="Probability (%)"
-                                  /> */}
                                       <Typography fontWeight={600} flex={'2'}>
                                         Rarity:{' '}
                                         {Number(
@@ -400,13 +356,10 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
                 <Grid item xs={12}>
                   <UploadImages
                     onSuccess={onSuccess}
-                    // initFile={imageListTest}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
-                  {/* <Typography variant="h6">Total Image Copies: {totalQuantity}</Typography>
-                <Typography variant="h6">Total Images: {imageObjectList?.length || 0}</Typography> */}
                   {typeof errors.images === 'string' ? (
                     <Typography color="error" fontWeight={600}>
                       {errors.images}
@@ -421,18 +374,9 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
                     <LoadingButton variant="contained" loading={loadingAdd || loadingUpdate} type="submit">
                       Continute
                     </LoadingButton>
-                    {/* <Link to={`/collection/detail/${collectionId}`}> */}
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        setFullLoading(true);
-                        setFinished(true);
-                        formik.submitForm();
-                      }}
-                    >
+                    <Button variant="outlined" onClick={handleFinishCreate}>
                       Finish Create
                     </Button>
-                    {/* </Link> */}
                   </Stack>
                 </Grid>
               </Grid>

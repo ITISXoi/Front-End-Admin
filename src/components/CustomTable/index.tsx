@@ -107,24 +107,15 @@ const CustomTable: FC<CustomTableProps> = (props) => {
                     backgroundColor: 'background.paper',
                     cursor: rowClick ? 'pointer' : 'unset',
                     '& td:first-of-type': {
-                      // borderLeft: '1px solid',
                       borderTopLeftRadius: '8px',
                       borderBottomLeftRadius: '8px',
-                      // borderColor,
                     },
                     '& td:last-of-type': {
                       textAlign: 'center',
-                      // borderRight: '1px solid',
                       borderTopRightRadius: '8px',
                       borderBottomRightRadius: '8px',
-                      // borderColor,
                     },
-                    '&:last-of-type .MuiTableCell-root': {
-                      // borderBottom:
-                      //   theme.palette.mode === 'dark'
-                      //     ? `1px solid ${theme.palette.divider} !important`
-                      //     : `1px solid ${theme.palette.text.secondary} !important`,
-                    },
+                    '&:last-of-type .MuiTableCell-root': {},
                   }}
                 >
                   {row.cells.map((cell: any) => (
@@ -134,9 +125,6 @@ const CustomTable: FC<CustomTableProps> = (props) => {
                         fontSize: 13,
                         fontWeight: 500,
                         color: 'text.disabled',
-                        // borderTop: '1px solid',
-                        // borderBottom: '1px solid',
-                        // borderColor,
                       }}
                     >
                       {cell.render('Cell')}

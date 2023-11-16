@@ -179,13 +179,13 @@ const CollectionDetail = () => {
                     </LoadingButton>
                   )}
                 </Box>
-                {nowDate.toLocaleString('en-GB') > startDate.toLocaleString('en-GB') && (
+                {nowDate > startDate && !data?.isPublic ? (
                   <Stack>
                     <Typography sx={{ color: 'red' }} variant="h6">
                       Please make sure your time is public before the start mint time
                     </Typography>
                   </Stack>
-                )}
+                ) : null}
               </>
             )}
           </Grid>

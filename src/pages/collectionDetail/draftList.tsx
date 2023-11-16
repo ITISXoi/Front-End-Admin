@@ -16,7 +16,7 @@ const DraftList: FC<Props> = ({ collectionId, isAutoMint }) => {
     // address: '0x18f459fa6086657Fee39552BdD6Abb6f8f7dE105',
     // chain: 'mumbai',
     // chain: chainName[0]?.name || '',
-    // type: 'draft',
+    type: 'draft',
     collectionKeyId: collectionId,
     page: 1,
     limit: 100,
