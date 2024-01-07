@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, InputAdornment, Stack, Typography } from '@mui/material';
@@ -37,7 +38,7 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   const { mutate: finishDraft } = useMutation(createDraftRequest, {
     onSuccess: (data) => {
       setFullLoading(false);
-      toast.success('Created Draft NFTs Succesed !');
+      toast.success('Created Collection Succesed !');
       navigate(`/collection/detail/${collectionId}`);
     },
     onError: () => {
@@ -74,6 +75,10 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
     initialValues,
     validationSchema: validationSchema,
     onSubmit: (values: ILayerCreate) => {
+      if (!values?.name && !values?.description && !values?.images?.length) {
+        navigate(`/collection/detail/${collectionId}`);
+        return;
+      }
       const listHaveFile = values?.images?.filter((item_) => typeof item_.imageUrl !== 'string');
       const listNotHaveFile = values?.images?.filter((item_) => typeof item_.imageUrl === 'string');
       const imagesDescription = listHaveFile
@@ -119,6 +124,9 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   });
 
   const { values, errors, handleChange, handleSubmit, touched, setFieldValue, setValues, setTouched } = formik;
+  console.log('values', values);
+  console.log('errors', errors);
+
   const navigate = useNavigate();
   const { mutate: add, isLoading: loadingAdd } = useMutation(createLayer, {
     onSuccess: (data) => {
@@ -212,8 +220,12 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
   const handleFinishCreate = () => {
     setFullLoading(true);
     setFinished(true);
-    formik.submitForm();
   };
+  useEffect(() => {
+    if (finish) {
+      formik.submitForm();
+    }
+  }, [finish]);
   if (!data) {
     return <LoadingScreen />;
   }
@@ -354,9 +366,7 @@ const CreateLayerStep: FC<Props> = ({ onBack, onNext, step }) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <UploadImages
-                    onSuccess={onSuccess}
-                  />
+                  <UploadImages onSuccess={onSuccess} />
                 </Grid>
 
                 <Grid item xs={12}>

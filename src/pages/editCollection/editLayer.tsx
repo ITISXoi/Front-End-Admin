@@ -38,7 +38,7 @@ const EditLayer: FC<Props> = ({ onBack, onNext }) => {
 
   const { mutate: finishDraft } = useMutation(createDraftRequest, {
     onSuccess: (data) => {
-      toast.success('Created Draft NFTs Succesed !');
+      toast.success('Created Collection Succesed !');
       navigate(`/collection/detail/${collectionId}`);
     },
     onError: () => {
@@ -56,6 +56,7 @@ const EditLayer: FC<Props> = ({ onBack, onNext }) => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().max(256).required('Collection Name requrired!'),
+    description: Yup.string().max(256).required('Description required!'),
     images: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()
@@ -77,6 +78,7 @@ const EditLayer: FC<Props> = ({ onBack, onNext }) => {
     onNext();
     // navigate(`/collection/detail/${collectionId}`);
   };
+  console.log('initialValues', initialValues);
 
   const formik = useFormik({
     initialValues,
@@ -419,7 +421,6 @@ const EditLayer: FC<Props> = ({ onBack, onNext }) => {
                   <Button
                     variant="outlined"
                     onClick={() => {
-                      console.log('alo');
                       finishDraft(collectionId);
                     }}
                   >

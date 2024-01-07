@@ -64,13 +64,11 @@ const GeneralStep: FC<Props> = ({ onNext }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    // name: Yup.string().max(256).required('Collection Name requrired!'),
-    // description: Yup.string().max(1000),
-    // address: Yup.string().required(t('collection.contract_address_required')),
-    // chainId: Yup.string().required(t('collection.chain_required')),
-    // type: Yup.string().required(t('collection.type_required')),
-    // image: Yup.mixed().required(t('collection.thumbnail_required')),
-    // banner: Yup.mixed().required(t('collection.banner_required')),
+    name: Yup.string().max(256).required('Collection Name is field required!'),
+    description: Yup.string().required('Collection description is field required').max(1000),
+    totalNfts: Yup.string().required('Total NFT is field required!'),
+    image: Yup.mixed().required('Collection Thumbnail is field required'),
+    banner: Yup.mixed().required('Collection Banner is field required'),
   });
 
   const { values, errors, handleChange, handleSubmit, touched, setFieldValue } = useFormik({
@@ -219,25 +217,9 @@ const GeneralStep: FC<Props> = ({ onNext }) => {
                   />
                 </Stack>
               </Grid>
-              {/* <Grid item xs={12}>
-                <LightTextField
-                  fullWidth
-                  name="numberLayers"
-                  placeholder="Number of Layers"
-                  value={values.numberLayers}
-                  onChange={handleChange}
-                  error={Boolean(touched.numberLayers && errors.numberLayers)}
-                  helperText={touched.numberLayers && errors.numberLayers}
-                />
-              </Grid> */}
-              {/* <Grid item xs={6}>
-                <Select fullWidth name="isAutoMint" onChange={handleChange} value={values.isAutoMint}>
-                  <MenuItem value={true as any}>Auto Generate NFT</MenuItem>
-                  <MenuItem value={false as any}>Manual Generate NFT</MenuItem>
-                </Select>
-              </Grid> */}
               <Grid item xs={6}>
                 <LightTextField
+                  type="number"
                   fullWidth
                   name="totalNfts"
                   placeholder="Total NFT"
