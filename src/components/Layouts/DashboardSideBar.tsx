@@ -38,7 +38,7 @@ const StyledListItemButton = styled(ListItemButton)(() => ({
 // root component
 const DashboardSideBar: FC<SideNavBarProps> = ({ showMobileSideBar, closeMobileSideBar }) => {
   const navigate = useNavigate();
-  const { isAdmin } = useUser();
+  const { isAdmin, user } = useUser();
   const [active, setActive] = useState('Dashboard');
   const downMd = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
@@ -48,6 +48,7 @@ const DashboardSideBar: FC<SideNavBarProps> = ({ showMobileSideBar, closeMobileS
     navigate(menuItem.path);
     closeMobileSideBar();
   };
+  console.log(user, isAdmin);
 
   const routes = useMemo(() => {
     return isAdmin ? adminRoutes : artistRoutes;

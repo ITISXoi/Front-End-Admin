@@ -71,8 +71,8 @@ const CollectionList: FC = () => {
       )}
       <CustomTable
         columnShape={columns}
-        pageSize={data?.meta.itemsPerPage ?? 0}
-        pageCount={data?.meta.totalPages ?? 0}
+        pageSize={data?.meta?.itemsPerPage ?? 0}
+        pageCount={data?.meta?.totalPages ?? 0}
         data={data?.items ?? []}
         currentPage={pageParams.page}
         fetchNextPage={(nextPage) => {
